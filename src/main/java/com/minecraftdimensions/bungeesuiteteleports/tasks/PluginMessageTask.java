@@ -1,11 +1,14 @@
 package com.minecraftdimensions.bungeesuiteteleports.tasks;
 
 import com.minecraftdimensions.bungeesuiteteleports.BungeeSuiteTeleports;
+import com.minecraftdimensions.bungeesuiteteleports.utils.OptionalUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PluginMessageTask extends BukkitRunnable {
 
@@ -21,16 +24,22 @@ public class PluginMessageTask extends BukkitRunnable {
 
     @SuppressWarnings("unchecked")
     public void run() {
-        Player[] players = Bukkit.getOnlinePlayers();
-        if ( players.length == 0 ) {
+        List<Player> players = getOnlinePlayers();
+        if ( players.size() == 0 ) {
             return;
         }
-        Player p = Bukkit.getOnlinePlayers()[0];
+        Player p = players.get(0);
         if ( p == null ) {
             return;
         }
         p.sendPluginMessage( BungeeSuiteTeleports.instance, BungeeSuiteTeleports.OUTGOING_PLUGIN_CHANNEL, bytes.toByteArray() );
     }
 
-
+    public static List<Player> getOnlinePlayers(){
+        return new OptionalUtils<>(()->{
+            List<Player> onlinePlayers = new ArrayList<>();
+            Bukkit.getWorlds().forEach(world -> onlinePlayers.addAll(world.getPlayers()));
+            return onlinePlayers;
+        }).getOptional().orElseGet(ArrayList::new);
+    }
 }

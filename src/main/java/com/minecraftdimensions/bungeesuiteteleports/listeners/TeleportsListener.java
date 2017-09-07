@@ -1,5 +1,6 @@
 package com.minecraftdimensions.bungeesuiteteleports.listeners;
 
+import com.minecraftdimensions.bungeesuiteteleports.tasks.PluginMessageTask;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -55,7 +56,7 @@ public class TeleportsListener implements Listener {
 	@EventHandler
 	public void playerLeave(PlayerQuitEvent e){
 		boolean empty = false;
-		if(Bukkit.getOnlinePlayers().length==1){
+		if(PluginMessageTask.getOnlinePlayers().size()==1){
 			empty = true;
 		}
 		TeleportsManager.sendTeleportBackLocation(e.getPlayer(), empty);	
